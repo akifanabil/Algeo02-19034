@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <title>12:55 Search Engine</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+    </head>
+    <body>
+        <div class="isi">
+            <div class="cari">
+                <img class="logo" src="/static/images/1255.png">
+                <form method="POST">
+                    <input class="tfield" name="text">
+                    <input class="searchbutton" type="submit" value="🔍">
+                </form>
+            </div>
+            <div class="teks">
+                {{teks}}
+            </div>
+            <div class="footer">
+            <a href="about">Perihal</a>
+            </div>
+        </div>
+    </body>
+</html>
