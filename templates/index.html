@@ -13,7 +13,15 @@
                 </form>
             </div>
             <div class="teks">
-                {{teks}}
+                {% if query!='' %}
+                    <h3>Search results for <i>{{query}}</i> : </h3>
+                    {% for k, v in sim_sorted %}
+                        {% if v != 0.0 %}
+                            <p>Nilai Similaritas: {{v}}</p>
+                            <p>{{documents[k]}}</p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
             </div>
             <div class="footer">
             <a href="about">Perihal</a>
