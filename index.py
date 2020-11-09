@@ -10,54 +10,62 @@ import string
 app = Flask(__name__)
 
 # Make a request to the website
-r = requests.get('https://bola.kompas.com/')
+web = requests.get('https://www.alodokter.com')
 
 # Create an object to parse the HTML format
-soup = BeautifulSoup(r.content, 'html.parser')
+soup = BeautifulSoup(web.content,'html.parser')
 
-# Retrieve all popular news links (Fig. 1)
-link = []
-for i in soup.find('div', {'class':'most__wrap'}).find_all('a'):
-    i['href'] = i['href'] + '?page=all'
-    link.append(i['href'])
+# Array containing url of each article
+urls=[]
+# Array containing short description of each article
+short_desc=[]
+# Array containing the title of articles
+title=[]
 
-# For each link, we retrieve paragraphs from it, combine each paragraph as one string, and save it to documents (Fig. 2)
-documents = []
-for i in link:
-    # Make a request to the link
+# Retrieve links
+for i in soup.findAll("card-post-index"):
+    urls.append("https://www.alodokter.com"+ i.attrs['url-path'])
+    short_desc.append(i.attrs['short-description'])
+    title.append(i.attrs['title'])
+
+# Make array containing all of articles content
+articles=[]
+idx=0
+
+# For each link, we retrieve paragraphs from it, combine each paragraph as one string, and save it to articles array
+for i in urls:
     r = requests.get(i)
-  
-    # Initialize BeautifulSoup object to parse the content 
-    soup = BeautifulSoup(r.content, 'html.parser')
-  
-    # Retrieve all paragraphs and combine it as one
-    sen = []
-    for i in soup.find('div', {'class':'read__content'}).find_all('p'):
-        sen.append(i.text)
-  
-    # Add the combined paragraphs to documents
-    documents.append(' '.join(sen))
+    soupr = BeautifulSoup(r.text,'html.parser')
 
-documents_clean = []
-for d in documents:
+    contentperarticle=[]
+    for i in soupr.findAll(["p","h3","h4","li"]):
+        contentperarticle.append(i.text.strip())
+
+    articles.append(title[idx]+' '+ ' '.join(contentperarticle))
+    idx+=1
+
+print(articles[0])
+
+articles_clean = []
+for a in articles:
     # Remove Unicode
-    document_test = re.sub(r'[^\x00-\x7F]+', ' ', d)
+    article_test = re.sub(r'[^\x00-\x7F]+', ' ', a)
     # Remove Mentions
-    document_test = re.sub(r'@\w+', '', document_test)
+    article_test = re.sub(r'@\w+', '', article_test)
     # Lowercase the document
-    document_test = document_test.lower()
+    article_test = article_test.lower()
     # Remove punctuations
-    document_test = re.sub(r'[%s]' % re.escape(string.punctuation), ' ', document_test)
+    article_test = re.sub(r'[%s]' % re.escape(string.punctuation), ' ', article_test)
     # Lowercase the numbers
-    document_test = re.sub(r'[0-9]', '', document_test)
+    article_test = re.sub(r'[0-9]', '', article_test)
     # Remove the doubled space
-    document_test = re.sub(r'\s{2,}', ' ', document_test)
-    documents_clean.append(document_test)
+    article_test = re.sub(r'\s{2,}', ' ', article_test)
+    articles_clean.append(article_test)
 
 # Instantiate a TfidfVectorizer object
 vectorizer = TfidfVectorizer()
 # It fits the data and transform it as a vector
-X = vectorizer.fit_transform(documents_clean)
+X = vectorizer.fit_transform(articles_clean)
 # Convert the X as transposed matrix
 X = X.T.toarray()
 # Create a DataFrame and set the vocabulary as the index
@@ -86,7 +94,7 @@ def index():
         q1 = request.form['text']
         sim_sorted=get_sorted_sim(q1, df)
 
-    return render_template('index.html',query=q1,sim_sorted=sim_sorted,documents=documents)
+    return render_template('index.html',query=q1,sim_sorted=sim_sorted,title=title,short_desc=short_desc,urls=urls)
 
 # @app.route('/', methods=['POST'])
 # def index_post():

@@ -17,8 +17,9 @@
                     <h3>Search results for <i>{{query}}</i> : </h3>
                     {% for k, v in sim_sorted %}
                         {% if v != 0.0 %}
+                            <a href="{{urls[k]}}">{{title[k]}}</a>
+                            <p>{{short_desc[k]}}</p>
                             <p>Nilai Similaritas: {{v}}</p>
-                            <p>{{documents[k]}}</p>
                         {% endif %}
                     {% endfor %}
                 {% endif %}
