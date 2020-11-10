@@ -2,10 +2,12 @@ from flask import Flask, request, render_template
 import requests
 from bs4 import BeautifulSoup
 import re
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
 import pandas as pd
 import numpy as np
 import string
+from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
+import math
 
 app = Flask(__name__)
 
@@ -44,7 +46,9 @@ for i in urls:
     articles.append(title[idx]+' '+ ' '.join(contentperarticle))
     idx+=1
 
-print(articles[0])
+# Using Sastrawi
+factory = StemmerFactory()
+stemmer = factory.create_stemmer()
 
 articles_clean = []
 for a in articles:
@@ -60,16 +64,30 @@ for a in articles:
     article_test = re.sub(r'[0-9]', '', article_test)
     # Remove the doubled space
     article_test = re.sub(r'\s{2,}', ' ', article_test)
+    # membuang imbuhan
+    articles_test = stemmer.stem(article_test)
     articles_clean.append(article_test)
 
 # Instantiate a TfidfVectorizer object
-vectorizer = TfidfVectorizer()
+vectorizer = CountVectorizer()
 # It fits the data and transform it as a vector
 X = vectorizer.fit_transform(articles_clean)
 # Convert the X as transposed matrix
 X = X.T.toarray()
 # Create a DataFrame and set the vocabulary as the index
 df = pd.DataFrame(X, index=vectorizer.get_feature_names())
+
+def nilaidot(vec,q_vec):
+    sum = 0
+    for i in range (0,len(q_vec)):
+        sum = sum + vec[i]*q_vec[i]
+    return sum
+
+def panjangvektor(vector):
+    sum = 0
+    for i in range (0,len(vector)):
+        sum = sum + vector[i]
+    return math.sqrt(sum)
 
 def get_sorted_sim(q, df):
   # Convert the query become a vector
@@ -78,13 +96,13 @@ def get_sorted_sim(q, df):
   sim = {}
   # Calculate the similarity
   for i in range(10):
-    sim[i] = np.dot(df.loc[:, i].values, q_vec) / np.linalg.norm(df.loc[:, i]) * np.linalg.norm(q_vec)
+      vec = df.loc[:, i].values
+      sim[i] = nilaidot(vec,q_vec)/(panjangvektor(vec)*panjangvektor(q_vec))
   
   # Sort the values 
   sim_sorted = sorted(sim.items(), key=lambda x: x[1], reverse=True)
   # Print the articles and their similarity values
   return sim_sorted
-
 
 @app.route('/', methods=['GET','POST'])
 def index():
