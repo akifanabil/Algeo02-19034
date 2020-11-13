@@ -76,6 +76,18 @@ X = vectorizer.fit_transform(articles_clean)
 X = X.T.toarray()
 # Create a DataFrame and set the vocabulary as the index
 df = pd.DataFrame(X, index=vectorizer.get_feature_names())
+# Number of column in df
+banyakkolom = len(df.columns)
+
+# Count number of words in each articles
+banyakkata=[0 for i in range(banyakkolom)]
+
+for k in range (0,banyakkolom):
+    doc = df.loc[:,k].values
+    count = 0
+    for j in range (len(doc)):
+        count = count + int(doc[j])
+    banyakkata[k] = count
 
 def nilaidot(vec,q_vec):
     sum = 0
@@ -112,7 +124,7 @@ def index():
         q1 = request.form['text']
         sim_sorted=get_sorted_sim(q1, df)
 
-    return render_template('index.html',query=q1,sim_sorted=sim_sorted,title=title,short_desc=short_desc,urls=urls)
+    return render_template('index.html',query=q1,sim_sorted=sim_sorted,title=title,short_desc=short_desc,urls=urls,banyakkata=banyakkata)
 
 # @app.route('/', methods=['POST'])
 # def index_post():

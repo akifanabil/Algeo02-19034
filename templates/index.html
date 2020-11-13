@@ -16,11 +16,11 @@
                 {% if query!='' %}
                     <h3>Search results for <i>{{query}}</i> : </h3>
                     {% for k, v in sim_sorted %}
-                        {% if v != 0.0 %}
-                            <a href="{{urls[k]}}">{{title[k]}}</a>
-                            <p>{{short_desc[k]}}</p>
-                            <p>Nilai Similaritas: {{v}}</p>
-                        {% endif %}
+                        <a href="{{urls[k]}}">{{title[k]}}</a>
+                        <p>Jumlah kata : {{banyakkata[k]}}</p>
+                        <p>Nilai Similaritas: {{v}}</p>
+                        <p>{{short_desc[k]}}</p>
+                        <br>
                     {% endfor %}
                 {% endif %}
             </div>
