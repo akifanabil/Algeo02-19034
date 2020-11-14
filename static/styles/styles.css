@@ -67,3 +67,9 @@ a{
     text-align: center;
     color: #43454a;
 }
+tabel{
+    width: 100%;
+    border-collapse: collapse;
+    height: 70px;
+    text-align: center;
+}

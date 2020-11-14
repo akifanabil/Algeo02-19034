@@ -6,6 +6,8 @@ from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFacto
 import string
 from sklearn.feature_extraction.text import CountVectorizer
 import pandas as pd
+import math
+import numpy as np
 
 app = Flask(__name__)
 
@@ -118,8 +120,6 @@ def get_sorted_sim(q, df):
   return sim_sorted
     
 
-        
-
 # MAIN PROGRAM
 
 # Make array containing all of articles content
@@ -139,6 +139,7 @@ getdata(urls,short_desc,title,articles)
 # Clean articles data
 articles = clean_articles(articles)
 df = vectorize(articles)
+banyakkolom = len(df.columns)
 
 # Count number of words in each articles
 banyakkata = CountWordsArticles(df)
@@ -147,15 +148,22 @@ banyakkata = CountWordsArticles(df)
 def index():
     q1=''
     sim_sorted=[]
+    tabterm=pd.DataFrame(data=None, index=None, columns=None)
     if request.method=='POST':
         q1 = request.form['text']
-
         # Clean query
         q1 = clean_text(q1)
-
         sim_sorted = get_sorted_sim(q1, df)
+        # Showing table of term
+        q=[q1]
+        q_vec = vectorizer.transform(q).toarray().reshape(df.shape[0],)
+        tabterm = pd.DataFrame(q_vec, index=vectorizer.get_feature_names(), columns=["Query"])
+        for k in range(banyakkolom):
+            indeks = sim_sorted[k][0]
+            vecdat = df.loc[:, indeks].values
+            tabterm.insert(k+1,"D"+str(k+1),vecdat,True)
 
-    return render_template('index.html',query=q1,sim_sorted=sim_sorted,title=title,short_desc=short_desc,urls=urls,banyakkata=banyakkata)
+    return render_template('index.html',query=q1,sim_sorted=sim_sorted,title=title,short_desc=short_desc,urls=urls,banyakkata=banyakkata,tables=[tabterm.to_html(classes='tabel')])
 
 # @app.route('/', methods=['POST'])
 # def index_post():

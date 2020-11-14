@@ -24,6 +24,12 @@
                             <br>
                         {%endif%}
                     {% endfor %}
+                    <br>
+                    <div class="tabel">
+                        {%for table in tables%}
+                            {{table|safe}}
+                        {%endfor%}
+                    </div>
                 {% endif %}
             </div>
             <div class="footer">
