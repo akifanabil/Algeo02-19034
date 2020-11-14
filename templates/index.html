@@ -25,11 +25,9 @@
                         {%endif%}
                     {% endfor %}
                     <br>
-                    <div class="tabel">
-                        {%for table in tables%}
-                            {{table|safe}}
-                        {%endfor%}
-                    </div>
+                    {%for tab in tables%}
+                        {{tab|safe}}
+                    {%endfor%}
                 {% endif %}
             </div>
             <div class="footer">

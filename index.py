@@ -6,7 +6,6 @@ from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFacto
 import string
 from sklearn.feature_extraction.text import CountVectorizer
 import pandas as pd
-import math
 import numpy as np
 
 app = Flask(__name__)
@@ -98,7 +97,7 @@ def nilaidot(vec,q_vec):
 def panjangvektor(vector):
     sum = 0
     for i in range (0,len(vector)):
-        sum = sum + vector[i]
+        sum = sum + (vector[i]**2)
     return (sum)**(1/2)
 
 def get_sorted_sim(q, df):
@@ -163,7 +162,7 @@ def index():
             vecdat = df.loc[:, indeks].values
             tabterm.insert(k+1,"D"+str(k+1),vecdat,True)
 
-    return render_template('index.html',query=q1,sim_sorted=sim_sorted,title=title,short_desc=short_desc,urls=urls,banyakkata=banyakkata,tables=[tabterm.to_html(classes='tabel')])
+    return render_template('index.html',query=q1,sim_sorted=sim_sorted,title=title,short_desc=short_desc,urls=urls,banyakkata=banyakkata,tables=[tabterm.to_html(classes='table')])
 
 # @app.route('/', methods=['POST'])
 # def index_post():
