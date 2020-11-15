@@ -95,6 +95,7 @@ a{
 .res{
     justify-content: center;
     display:flex;
+    font-family: 'Itim', cursive;
 }
 
 .res2{
@@ -113,4 +114,13 @@ a{
 
 .rumus:hover{
     border: 3px solid #416275;
+}
+
+.uploader{
+    display:block;
+    text-align:center;
+}
+
+.list{
+    text-align:left;
 }
