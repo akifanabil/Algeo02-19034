@@ -1,6 +1,4 @@
 from flask import Flask,flash, request, redirect, url_for, render_template, send_from_directory
-import requests
-from bs4 import BeautifulSoup
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory
 import string
@@ -249,6 +247,8 @@ def index():
         q1 = clean_text(q1)
         sim_sorted = get_sorted_sim(q1, df)
         # Showing table of term
+        if q1=='':
+            return redirect('/')
         qkata = q1.split()
         arrterm = listterm(qkata)
         q_vec = kolterm(qkata,arrterm)
