@@ -21,6 +21,6 @@ Proyek tugas besar ke-2 mata kuliah IF2123 Aljabar Linier dan Geometri, membuat 
     3. Sastrawi `pip install Sastrawi`
     4. Pandas `pip install pandas`
     5. Numpy `pip install numpy`
-3. Jalankan `index.py`
+3. Pastikan perangkat Anda terhubung dengan internet, lalu jalankan `index.py`
 4. Buka alamat website yang dituliskan (`http://127.0.0.1:5000/` atau `localhost:5000`) menggunakan *browser* seperti Mozilla Firefox, Google Chrome, Microsoft Edge, dll.
 ![Contoh alamat website](screenshot2.png?raw=true "Contoh alamat website")
