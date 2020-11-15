@@ -15,15 +15,19 @@
             <div class="teks">
                 {% if query!='' %}
                     <h3>Search results for <i>{{query}}</i> : </h3>
-                    {% for k,v in sim_sorted %}
-                        {% if v!=0: %}
-                            <a href="{{urls[k]}}">{{title[k]}}</a>
-                            <p>Jumlah kata : {{banyakkata[k]}}</p>
-                            <p>Nilai Similaritas: {{v}}</p>
-                            <p>{{short_desc[k]}}</p>
-                            <br>
-                        {%endif%}
-                    {% endfor %}
+                    <div class="res">
+                        <div class="res2">
+                        {% for k,v in sim_sorted %}
+                            {% if v!=0: %}
+                                <p><big><a href="{{urls[k]}}">{{title[k]}}</a></big><br>
+                                Jumlah kata: {{banyakkata[k]}}<br>
+                                Nilai Similaritas: {{v}}<br>
+                                {{short_desc[k]}}
+                                </p>
+                            {%endif%}
+                        {% endfor %}
+                        </div>
+                    </div>
                     <br>
                     {%for tab in tables%}
                         {{tab|safe}}

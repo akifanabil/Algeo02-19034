@@ -67,9 +67,38 @@ a{
     text-align: center;
     color: #43454a;
 }
-table {
+
+.table {
     width: 100%;
     border-collapse: collapse;
     height: 70px;
     text-align: center;
+    border: #262929;
+}
+
+.table th{
+    padding: 10px;
+    text-align: center;
+    background-color: #5e918e;
+    color: #edfffe;
+    font-weight: normal;
+}
+
+.table tr:nth-child(even){
+    background-color: #e6fcfb;
+}
+
+.table tr:hover{
+    background-color: #8fc2bf;
+}
+
+.res{
+    justify-content: center;
+    display:flex;
+}
+
+.res2{
+    display: block;
+    text-align: left;
+    width:50%;
 }
