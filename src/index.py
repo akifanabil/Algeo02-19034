@@ -117,7 +117,30 @@ def get_sorted_sim(q, df):
   # Sort the values 
   sim_sorted = sorted(sim.items(), key=lambda x: x[1], reverse=True)
   return sim_sorted
-    
+
+def listterm(qkata):
+    arrterm=[]
+    # membuat array berisi query
+    arrterm.append(qkata[0])
+    for i in range (1,len(qkata)):
+        found = False 
+        k = 0
+        while (k < len(arrterm) and not(found)):
+            if qkata[i] == arrterm[k]:
+                found = True
+            else:
+                k = k+1
+        if not(found):
+            arrterm.append(qkata[i])
+    return arrterm
+
+def kolterm(kata, arrterm):
+    q_vec = [0 for i in range (len(arrterm))]
+    for j in range (len(kata)):
+        for k in range (len(arrterm)):
+            if (kata[j] == arrterm[k]):
+                q_vec[k] = q_vec[k] + 1
+    return(q_vec)   
 
 # MAIN PROGRAM
 
@@ -137,6 +160,8 @@ getdata(urls,short_desc,title,articles)
 
 # Clean articles data
 articles = clean_articles(articles)
+banyakartikel = len(articles)
+
 df = vectorize(articles)
 banyakkolom = len(df.columns)
 
@@ -147,6 +172,7 @@ banyakkata = CountWordsArticles(df)
 def index():
     q1=''
     sim_sorted=[]
+    arrterm=[]
     tabterm=pd.DataFrame(data=None, index=None, columns=None)
     if request.method=='POST':
         q1 = request.form['text']
@@ -154,12 +180,14 @@ def index():
         q1 = clean_text(q1)
         sim_sorted = get_sorted_sim(q1, df)
         # Showing table of term
-        q=[q1]
-        q_vec = vectorizer.transform(q).toarray().reshape(df.shape[0],)
-        tabterm = pd.DataFrame(q_vec, index=vectorizer.get_feature_names(), columns=["Query"])
-        for k in range(banyakkolom):
+        qkata = q1.split()
+        arrterm = listterm(qkata)
+        q_vec = kolterm(qkata,arrterm)
+        tabterm = pd.DataFrame(q_vec, index=arrterm, columns=["Query"])
+        for k in range(banyakartikel):
             indeks = sim_sorted[k][0]
-            vecdat = df.loc[:, indeks].values
+            artikel = articles[indeks].split()
+            vecdat = kolterm(artikel,arrterm)
             tabterm.insert(k+1,"D"+str(k+1),vecdat,True)
 
     return render_template('index.html',query=q1,sim_sorted=sim_sorted,title=title,short_desc=short_desc,urls=urls,banyakkata=banyakkata,tables=[tabterm.to_html(classes='table')])
@@ -169,4 +197,4 @@ def about():
     return render_template('about.html')
 
 if __name__ == '__main__':
-  app.run(debug=0)
+  app.run(debug=1)
