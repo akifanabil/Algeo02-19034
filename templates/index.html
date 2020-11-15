@@ -6,7 +6,7 @@
     <body>
         <div class="isi">
             <div class="cari">
-                <img class="logo" src="/static/images/1255.png">
+                <img class="logo" src="/static/images/1255.png"><br>
                 <form method="POST">
                     <input class="tfield" name="text">
                     <input class="searchbutton" type="submit" value="🔍">
@@ -21,7 +21,7 @@
                             {% if v!=0: %}
                                 <p><big><a href="{{urls[k]}}">{{title[k]}}</a></big><br>
                                 Jumlah kata: {{banyakkata[k]}}<br>
-                                Nilai Similaritas: {{v}}<br>
+                                Nilai Similaritas: {{v*100}}%<br>
                                 {{short_desc[k]}}
                                 </p>
                             {%endif%}

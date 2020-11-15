@@ -62,7 +62,7 @@ a{
 .about{
     padding-top: 2em;
     padding-bottom: 2em;
-    width: 100%;
+    width: 80%;
     font-family: 'Itim', cursive;
     text-align: center;
     color: #43454a;
@@ -101,4 +101,16 @@ a{
     display: block;
     text-align: left;
     width:50%;
+}
+
+.rumus{
+    border: 3px solid #5e918e;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width:100%;
+    max-width:450px;
+}
+
+.rumus:hover{
+    border: 3px solid #416275;
 }

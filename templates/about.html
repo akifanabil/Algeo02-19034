@@ -4,18 +4,33 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
     </head>
     <body>
-        <div class="isi">
+        <div class="res">
             <div class="about">
+            <h1>Konsep <i>Search Engine</i></h1>
+            <p><i>Search engine</i> ini menggunakan <i>cosine simlarity</i>.
+            Setiap dokumen dan <i>query</i> dinyatakan sebagai vektor w = (w<sub>1</sub>,w<sub>2</sub>,...,w<sub>n</sub>) dalam R<sup>n</sup>,
+            dengan w<sub>i</sub> sebagai jumlah kemunculan kata <i>i</i> dalam dokumen.
+            Secara matematis, jika <b>d</b> adalah vektor yang diperoleh dari suatu dokumen dan
+            <b>q</b> adalah vektor yang diperoleh dari <i>query</i>, <i>cosine similarity</i> mengukur
+            kosinus dari sudut yang dibentuk di antara dua vektor <b>d</b> dan <b>q</b>.
+            Hal tersebut dapat dituliskan dengan:<br>
+            <img class="rumus" src="/static/images/rumus1.png"><br>
+            Dengan <b>Q</b>,<b>D</b> perkalian titik yang didefinisikan sebagai:<br>
+            <img class="rumus" src="/static/images/rumus2.png">
+            </p>
             <h1>How to Use</h1>
-            <p>(isi di sini)</p>
+            <p>1. Ketik <i>query</i> pada <i>textbox</i><br>
+            2. Tekan <b>Enter</b> atau klik tombol kaca pembesar (🔍) untuk melihat hasil pencarian
+            </p>
             <h1>About Us</h1>
-            <h3>Team duabelaslimalima</h3>
-            <p>13519034 Ruhiyah Faradishi Widiaputri</p>
-            <p>13519063 Melita</p>
-            <p>13519179 Akifa Nabil Ufairah</p>
-            <p></p>
-            <p><a href="{{url_for('index')}}">Kembali</a></p>
+            <p><big>Team duabelaslimalima</big><br>
+            13519034 Ruhiyah Faradishi Widiaputri<br>
+            13519063 Melita<br>
+            13519179 Akifa Nabil Ufairah</p>
             </div>
+        </div>
+        <div class="footer">
+            <a href="{{url_for('index')}}">Kembali</a>
         </div>
     </body>
 </html>
