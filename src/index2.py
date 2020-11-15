@@ -1,4 +1,4 @@
-from flask import Flask,flash, request, redirect, url_for, render_template
+from flask import Flask,flash, request, redirect, url_for, render_template, send_from_directory
 import requests
 from bs4 import BeautifulSoup
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
@@ -10,13 +10,17 @@ import pandas as pd
 import numpy as np
 from werkzeug.utils import secure_filename
 import os
+import glob
 
 app = Flask(__name__)
+
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+APP_STATIC = os.path.join(APP_ROOT, 'static')
 
 # Uploader Page
 app.secret_key = "secretkey"
 path = os.getcwd()
-UPLOAD_FOLDER = os.path.join(path, 'uploads')
+UPLOAD_FOLDER = os.path.join(path, 'static/uploads')
 
 if not os.path.isdir(UPLOAD_FOLDER):
     os.mkdir(UPLOAD_FOLDER)
@@ -53,35 +57,22 @@ stemmer = factory.create_stemmer()
 factory2 = StopWordRemoverFactory()
 stopword = factory2.create_stop_word_remover()
 
-def getdata(urls,short_desc,title, articles):
-    for i in range(1,3):
-        # Make a request to the website
-        link = 'https://www.alodokter.com/page/'+str(i)
-        web = requests.get(link)
+# Ambil data dari file
+def getdatafile(urls,short_desc,title,articles):
+    os.chdir(r'static/uploads')
+    myFiles = glob.glob('*.txt')
 
-        # Create an object to parse the HTML format
-        soup = BeautifulSoup(web.content,'html.parser')
-
-        # Retrieve links
-        for j in soup.findAll("card-post-index"):
-            urls.append("https://www.alodokter.com"+ j.attrs['url-path'])
-            short_desc.append(j.attrs['short-description'])
-            title.append(j.attrs['title'])
-            # img.append(j.attrs['image-url'])
-
-    idx=0
-    # For each link, we retrieve paragraphs from it, combine each paragraph as one string, and save it to articles array
-    for i in urls:
-        r = requests.get(i)
-        soupr = BeautifulSoup(r.text,'html.parser')
-
-        contentperarticle=[]
-        for i in soupr.findAll(["p","h3","h4","li"]):
-            contentperarticle.append(i.text.strip())
-
-        articles.append(title[idx]+' '+ ' '.join(contentperarticle))
-        idx+=1
- 
+    for f in myFiles:
+        namafile = 'uploads/'+f
+        namafile2 = 'static/'+namafile
+        title.append(f)
+        with app.open_resource(namafile2) as f2:
+            urls.append(namafile)
+            isitxt = f2.read()
+            articles.append(isitxt.decode())
+            desc = isitxt[:100].decode('utf-8','ignore')+"..."
+            short_desc.append(desc)
+            
 
 def CountWordsArticles(df):
     # Number of column in df
@@ -231,7 +222,7 @@ title=[]
 # img = []
 
 # Get urls, short description, title, and articles data
-getdata(urls,short_desc,title,articles)
+getdatafile(urls,short_desc,title,articles)
 
 # Clean articles data
 articles = clean_articles(articles)
@@ -274,5 +265,9 @@ def index():
 def about():
     return render_template('about.html')
 
+@app.route('/uploads/<path:filename>', methods=['GET', 'POST'])
+def download(filename):    
+    return send_from_directory(UPLOAD_FOLDER, filename=filename)
+
 if __name__ == '__main__':
-  app.run(debug=1)
+  app.run(debug=0,use_reloader=False)
