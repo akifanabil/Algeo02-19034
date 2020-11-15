@@ -4,9 +4,9 @@ from bs4 import BeautifulSoup
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory
 import string
-from sklearn.feature_extraction.text import CountVectorizer
 import pandas as pd
-import numpy as np
+from collections import Counter
+from scipy.sparse import csr_matrix
 
 app = Flask(__name__)
 
@@ -18,8 +18,6 @@ stemmer = factory.create_stemmer()
 factory2 = StopWordRemoverFactory()
 stopword = factory2.create_stop_word_remover()
 
-# Instantiate a TfidfVectorizer object
-vectorizer = CountVectorizer()
 
 def getdata(urls,short_desc,title, articles):
     for i in range(1,3):
@@ -79,14 +77,58 @@ def clean_articles(articles):
         cleaned.append(clean_text(article))
     return cleaned
 
-def vectorize(articles):
-    # It fits the data and transform it as a vector
-    X = vectorizer.fit_transform(articles)    
-    # Convert the X as transposed matrix
-    X = X.T.toarray()
-    # Create a DataFrame and set the vocabulary as the index
-    df = pd.DataFrame(X, index=vectorizer.get_feature_names())
+def get_unique_words(articles):
+    unique_words = set()
+
+    for article in articles:
+        for word in article.split(' '):
+            if len(word)>=2:
+                unique_words.add(word)
+    return sorted(unique_words)
+
+
+def vectorize(articles,unique_words):
+    # Array declaration that will contain unique words from articles
+
+    vocab = {}
+
+    # Get index of the word
+    for index, word in enumerate(sorted(list(unique_words))):
+        vocab[word] = index
+
+    row,col,val=[],[],[]
+    # Getting count values for each vocab word in data
+    for id, article in enumerate(articles):
+        count_word = dict(Counter(article.split(' ')))
+
+        for word, count in count_word.items():
+            if len(word)>=2:
+                column_idx = vocab.get(word)
+                if column_idx>=0:
+                    col.append(id)
+                    row.append(column_idx)
+                    val.append(count)
+
+    X = (csr_matrix((val,(row,col)), shape=(len(vocab), len(articles)))).toarray()
+    df = pd.DataFrame(X, index=sorted(unique_words))
     return df
+
+def vektorquery(query,unique_words):
+    query_word=[]
+    for word in query.split(' '):
+        query_word.append(word)
+    vec_query=[0 for i in range (len(unique_words))]
+    idx=0
+    found = False
+    for word in query_word:
+        found=False
+        idx=0
+        while not found and idx<len(unique_words):
+            if word==unique_words[idx]:
+                vec_query[idx] +=1
+                found=True
+            idx+=1
+    return vec_query
 
 def nilaidot(vec,q_vec):
     sum = 0
@@ -102,8 +144,7 @@ def panjangvektor(vector):
 
 def get_sorted_sim(q, df):
   # Convert the query become a vector
-  q = [q]
-  q_vec = vectorizer.transform(q).toarray().reshape(df.shape[0],)
+  q_vec = vektorquery(q,unique_words)
   
   sim = {}
   # Calculate the similarity
@@ -160,12 +201,15 @@ getdata(urls,short_desc,title,articles)
 
 # Clean articles data
 articles = clean_articles(articles)
+
+# Get unique words of article
+unique_words=get_unique_words(articles)
+
+df = vectorize(articles,unique_words)
+
+# Menyimpan panjang artikel, banyak kata, dan banyak kolom pada variabel
 banyakartikel = len(articles)
-
-df = vectorize(articles)
 banyakkolom = len(df.columns)
-
-# Count number of words in each articles
 banyakkata = CountWordsArticles(df)
 
 @app.route('/', methods=['GET','POST'])
