@@ -21,7 +21,8 @@ Proyek tugas besar ke-2 mata kuliah IF2123 Aljabar Linier dan Geometri, membuat 
     3. Sastrawi `pip install Sastrawi`
     4. Pandas `pip install pandas`
     5. Numpy `pip install numpy`
-    6. Requests `python -m pip install requests`
+    6. Scipy `pip install scipy`
+    7. Requests `python -m pip install requests`
 3. Terdapat dua mode dari pencarian:
     1. *Web scraping*, yaitu mengambil artikel dari situs alodokter. Jika akan menggunakan mode ini, pastikan perangkat Anda tersambung dengan internet, lalu jalankan `index.py`
     2. File .txt. Jika akan menggunakan mode ini, jalankan `index2.py`
