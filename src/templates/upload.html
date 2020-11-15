@@ -1,0 +1,30 @@
+<html>
+<head>
+<title>12:55 Search Engine Uploader</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+</head>
+<body>
+<div class="res"><div class="uploader">
+<h2>Pilih file .txt untuk di-upload:</h2>
+<p>{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="list">
+<p class=flashes><ul>{% for message in messages %}
+<li>{{ message }}</li>
+{% endfor %}
+</ul></p>
+</div>
+{% endif %}
+{% endwith %}
+</p>
+
+<form method="post" action="/upload" enctype="multipart/form-data">
+<dl><p><input type="file" name="files[]" multiple="true" autocomplete="off" required></p></dl>
+<p><input class="searchbutton" type="submit" value="Submit"></p></form>
+</div></div>
+
+<div class="footer">
+<a href="{{url_for('index')}}">Kembali</a>
+</div>
+</body>
+</html>
