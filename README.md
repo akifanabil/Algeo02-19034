@@ -2,15 +2,17 @@
 Proyek tugas besar ke-2 mata kuliah IF2123 Aljabar Linier dan Geometri, membuat *search engine* menggunakan *cosine similarity*. Dokumen-dokumen diambil dari https://www.alodokter.com.
 ## Daftar Isi
 - [Informasi Kelompok](#informasi-kelompok)
-- [Screenshots](#screenshots)
+- [Screenshot](#screenshot)
 - [Setup](#setup)
 ## Informasi Kelompok
 1. Nama kelompok: duabelaslimalima
-2. Anggota:
+2. Kelas: K-03
+3. Anggota:
     - 13519034 Ruhiyah Faradishi Widiaputri
     - 13519063 Melita
     - 13519179 Akifa Nabil Ufairah
-## Screenshots
+## Screenshot
+![Screenshot Search Engine](screenshot.png?raw=true "Screenshot Search Engine")
 ## Setup
 1. Install `python3` dari https://www.python.org/downloads/
 2. Install *library-library* berikut dengan mengetikkan *command* pada terminal jika belum tersedia:
