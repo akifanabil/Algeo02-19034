@@ -5,7 +5,6 @@ import string
 from collections import Counter
 from scipy.sparse import csr_matrix
 import pandas as pd
-import numpy as np
 from werkzeug.utils import secure_filename
 import os
 import glob

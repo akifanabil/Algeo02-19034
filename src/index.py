@@ -89,7 +89,8 @@ def get_unique_words(articles):
 
 
 def vectorize(articles,unique_words):
-    # Array declaration that will contain unique words from articles
+    # Fungsi yang mengubah articles menjadi suatu vektor, lalu vektor diubah menjadi data berbentuk dataframe yang memiliki indeks, vocab dan nomor dokumen
+    # Fungsi mereturn dataframe
 
     vocab = {}
 
@@ -115,6 +116,7 @@ def vectorize(articles,unique_words):
     return df
 
 def vektorquery(query,unique_words):
+    # Fungsi untuk mengubah query menjadi vektor
     query_word=[]
     for word in query.split(' '):
         query_word.append(word)
@@ -132,18 +134,22 @@ def vektorquery(query,unique_words):
     return vec_query
 
 def nilaidot(vec,q_vec):
+    # Fungsi melakukan pencarian dan mengembalikan hasil perkalian dot vektor vec dan q_vec 
     sum = 0
     for i in range (0,len(q_vec)):
         sum = sum + vec[i]*q_vec[i]
     return sum
 
 def panjangvektor(vector):
+    # Fungsi melakukan pencarian panjang vektor 'vector'
     sum = 0
     for i in range (0,len(vector)):
         sum = sum + (vector[i]**2)
     return (sum)**(1/2)
 
 def get_sorted_sim(q, df):
+    # Fungsi mengembalikan array sim tiap artikel berbentuk df dengan query q yang sudah disorting
+
   # Convert the query become a vector
   q_vec = vektorquery(q,unique_words)
   
@@ -215,14 +221,14 @@ banyakkata = CountWordsArticles(df)
 
 @app.route('/', methods=['GET','POST'])
 def index():
-    q1=''
+    query=''
     sim_sorted=[]
     arrterm=[]
     tabterm=pd.DataFrame(data=None, index=None, columns=None)
     if request.method=='POST':
-        q1 = request.form['text']
+        query = request.form['text']
         # Clean query
-        q1 = clean_text(q1)
+        q1 = clean_text(query)
         sim_sorted = get_sorted_sim(q1, df)
         # Showing table of term
         if q1=='':
@@ -237,7 +243,7 @@ def index():
             vecdat = kolterm(artikel,arrterm)
             tabterm.insert(k+1,"D"+str(k+1),vecdat,True)
 
-    return render_template('index.html',filemode=filemode,query=q1,sim_sorted=sim_sorted,title=title,short_desc=short_desc,urls=urls,banyakkata=banyakkata,tables=[tabterm.to_html(classes='table')])
+    return render_template('index.html',filemode=filemode,query=query,sim_sorted=sim_sorted,title=title,short_desc=short_desc,urls=urls,banyakkata=banyakkata,tables=[tabterm.to_html(classes='table')])
 
 @app.route('/about')
 def about():
