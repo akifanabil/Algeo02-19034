@@ -18,7 +18,7 @@ APP_STATIC = os.path.join(APP_ROOT, 'static')
 # Uploader Page
 app.secret_key = "secretkey"
 path = os.getcwd()
-UPLOAD_FOLDER = os.path.join(path, 'src/static/uploads')
+UPLOAD_FOLDER = os.path.join(path, 'src/static/uploads') #di sini
 
 if not os.path.isdir(UPLOAD_FOLDER):
     os.mkdir(UPLOAD_FOLDER)
