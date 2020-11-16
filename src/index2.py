@@ -18,7 +18,7 @@ APP_STATIC = os.path.join(APP_ROOT, 'static')
 # Uploader Page
 app.secret_key = "secretkey"
 path = os.getcwd()
-UPLOAD_FOLDER = os.path.join(path, 'static/uploads')
+UPLOAD_FOLDER = os.path.join(path, 'src/static/uploads')
 
 if not os.path.isdir(UPLOAD_FOLDER):
     os.mkdir(UPLOAD_FOLDER)
@@ -57,7 +57,7 @@ stopword = factory2.create_stop_word_remover()
 
 # Ambil data dari file
 def getdatafile(urls,short_desc,title,articles):
-    os.chdir(r'static/uploads')
+    os.chdir(r'src/static/uploads')
     myFiles = glob.glob('*.txt')
 
     for f in myFiles:
