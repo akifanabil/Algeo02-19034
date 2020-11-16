@@ -18,6 +18,7 @@ stemmer = factory.create_stemmer()
 factory2 = StopWordRemoverFactory()
 stopword = factory2.create_stop_word_remover()
 
+filemode = False
 
 def getdata(urls,short_desc,title, articles):
     for i in range(1,3):
@@ -236,7 +237,7 @@ def index():
             vecdat = kolterm(artikel,arrterm)
             tabterm.insert(k+1,"D"+str(k+1),vecdat,True)
 
-    return render_template('index.html',query=q1,sim_sorted=sim_sorted,title=title,short_desc=short_desc,urls=urls,banyakkata=banyakkata,tables=[tabterm.to_html(classes='table')])
+    return render_template('index.html',filemode=filemode,query=q1,sim_sorted=sim_sorted,title=title,short_desc=short_desc,urls=urls,banyakkata=banyakkata,tables=[tabterm.to_html(classes='table')])
 
 @app.route('/about')
 def about():

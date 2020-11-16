@@ -14,6 +14,7 @@ app = Flask(__name__)
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 APP_STATIC = os.path.join(APP_ROOT, 'static')
+filemode = True
 
 # Uploader Page
 app.secret_key = "secretkey"
@@ -259,7 +260,7 @@ def index():
             vecdat = kolterm(artikel,arrterm)
             tabterm.insert(k+1,"D"+str(k+1),vecdat,True)
 
-    return render_template('index.html',query=q1,sim_sorted=sim_sorted,title=title,short_desc=short_desc,urls=urls,banyakkata=banyakkata,tables=[tabterm.to_html(classes='table')])
+    return render_template('index.html',filemode=filemode,query=q1,sim_sorted=sim_sorted,title=title,short_desc=short_desc,urls=urls,banyakkata=banyakkata,tables=[tabterm.to_html(classes='table')])
 
 @app.route('/about')
 def about():
